@@ -1,13 +1,13 @@
 import java.math.BigDecimal;
 
-public class Assets {
+public class Asset {
 
     String description;
     String dateAcquired;
     BigDecimal originalCost;
 
 
-    public Assets(String description, String dateAcquired, BigDecimal originaCosst) {
+    public Asset(String description, String dateAcquired, BigDecimal originaCosst) {
         this.description = description;
         this.dateAcquired = dateAcquired;
         this.originalCost = originalCost;
@@ -29,8 +29,8 @@ public class Assets {
         this.dateAcquired = dateAcquired;
     }
 
-    public BigDecimal getOriginaCost() {
-        return getOriginaCost();
+    public BigDecimal getOriginalCost() {
+        return getOriginalCost();
 
     }
 

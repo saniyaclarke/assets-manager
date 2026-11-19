@@ -1,7 +1,7 @@
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Vehicle extends Assets {
+public class Vehicle extends Asset {
     private String makeModel;
     private int year;
     private int odometer;
@@ -40,40 +40,62 @@ public class Vehicle extends Assets {
 
     @Override
     public BigDecimal getValue() {
-    BigDecimal rate = BigDecimal.valueOf(0);
-    BigDecimal value;
-    int currentYear = LocalDate.now().getYear();
-    int carAge = currentYear - this.year;
+        int currentYear = LocalDate.now().getYear();
+        int carAge = currentYear - this.year;
+        BigDecimal rate;
+        BigDecimal value = BigDecimal.ZERO;
 
-    if(carAge < 4){
-       rate = new BigDecimal("0.03");
-    }
-    else if(carAge < 7){
-        rate = new BigDecimal("0.06");
-    }
-    else if(carAge < 11){
-        rate = new BigDecimal("0.08");
-    }
-    if(carAge > 10 ){
-        value = BigDecimal.valueOf(1000);
-    }
-    else {
-        BigDecimal deduction = rate.multiply(BigDecimal.valueOf(carAge).multiply(this.getOriginaCost()));
-        value = getOriginaCost().subtract(deduction);
-    }
-    if(this.odometer > 100_000){
-        if( ! (this.makeModel.contains("Honda") || this.makeModel.contains("Toyota")));
-            value = value.multiply(new BigDecimal("0.25"));
-    }
+        if (carAge <= 3) {
+            rate = BigDecimal.valueOf(carAge).multiply(BigDecimal.valueOf(0.03));
+            value = this.originalCost.subtract(rate.multiply(this.originalCost));
+        } else if (carAge <= 6) {
+            rate = BigDecimal.valueOf(carAge).multiply(BigDecimal.valueOf(0.06));
+            value = this.originalCost.subtract(rate.multiply(this.originalCost));
+        } else if (carAge <= 10) {
+            rate = BigDecimal.valueOf(carAge).multiply(BigDecimal.valueOf(0.08));
+            value = this.originalCost.subtract(rate.multiply(this.originalCost));
+        } else {
+            value = BigDecimal.valueOf(1000);
+        }
+        if (this.odometer > 100_000){
+            if (!this.makeModel.contains("Honda") && !this.makeModel.contains("Toyota")) {
+                value = value.subtract(value.multiply(BigDecimal.valueOf(0.25)));
+            }
 
-     return getValue();
+            }
+
+        return value;
+
     }
 }
-///getValue() : BigDecimal (override)
-/// // A car's value is determined as
-/// // 0-3 years old - 3% reduced value of cost per year
-/// // 4-6 years old - 6% reduced value of cost per year
-/// // 7-10 years old - 8% reduced value of cost per year
-/// // over 10 years old - $1000.00
-/// // MINUS reduce final value by 25% if over 100,000 miles
+
 /// // unless makeModel contains word Honda or Toyota
+
+
+/// BigDecimal rate = BigDecimal.valueOf(0);
+///     BigDecimal value;
+///     int currentYear = LocalDate.now().getYear();
+///     int carAge = currentYear - this.year;
+///
+///     if(carAge < 4){
+///        rate = new BigDecimal("0.03");
+///     }
+///     else if(carAge < 7){
+///         rate = new BigDecimal("0.06");
+///     }
+///     else if(carAge < 11){
+///         rate = new BigDecimal("0.08");
+///     }
+///     if(carAge > 10 ){
+///         value = BigDecimal.valueOf(1000);
+///     }
+///     else {
+///         BigDecimal deduction = rate.multiply(BigDecimal.valueOf(carAge).multiply(this.getOriginaCost()));
+///         value = getOriginaCost().subtract(deduction);
+///     }
+///     if(this.odometer > 100_000){
+///         if( ! (this.makeModel.contains("Honda") || this.makeModel.contains("Toyota")));
+///             value = value.multiply(new BigDecimal("0.25"));
+///     }
+///
+///      return getValue();
